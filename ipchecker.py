@@ -1,131 +1,121 @@
 #!/usr/bin/python
-__author__='Haridas N'
-__date__='2010-07-13 12:13:00'
-
-
+__author__ = 'Haridas N'
+__date__ = '2010-07-13 12:13:00'
 
 import urllib
 import re
 import commands
 
+
 class IP:
+    '''
 
-	'''
+    Ip Checker
+    ----------
 
-        Ip Checker
-	----------
+        Class IP with one public data member one list of ips and set
+        of methods to perform specific operations.
 
-        Class IP with one public data member one list of ips and set of methods to perform specific operations.
-
-
-	Developed using OOPs method. So here we have the followoing main classes and its datas, and methods to work over these data.
-
-
+        Developed using OOPs method. So here we have the followoing main
+        classes and its datas, and methods to work over these data.
 
         Class Name: IP
 
-	Datas:-
+    Datas:-
 
-            Initialize the Ip list under the __init__ function and also have facility to receive CIDR formated imputs.
+            Initialize the Ip list under the __init__ function and also
+            have facility to receive CIDR formated imputs.
 
                Methods:
 
                 1. Get senderbasescore()
 
-                	Check the senderbase scroe of each ips in the object ip list. if it have more than one ip then
-                	it will check it for each ip.
+                    Check the senderbase scroe of each ips in the object ip 
+                    list. if it have more than one ip then
+                    it will check it for each ip.
 
                 2. Get mxtoolbox status()
 
-                	Similar to the above method here it will retrive the status of the blacklisting and the DNSBL
-                	for each IP in the IP list.
+                    Similar to the above method here it will retrive the 
+                    status of the blacklisting and the DNSBL
+                    for each IP in the IP list.
 
-        	3. Get honeypot status of the ip
+            3. Get honeypot status of the ip
 
-                	Get number of honepot hits for these ips
+                    Get number of honepot hits for these ips
 
           '''
 
+    def __init__(self, ip):
+        self.ip = ip
 
-	def __init__(self,ip):
-              self.ip=ip
-
-
-
-
-	def __del__(self):
+    def __del__(self):
             pass
-	#print "Clearing the Memory...";
+    #print "Clearing the Memory...";
 
-	def getip(self):
+    def getip(self):
 
-		print " This is the Ip: %s" % self.ip
+        print " This is the Ip: %s" % self.ip
 
+    def check_senderbase(self):
+        #print "Checking sender base..."
+                # Create a dictionry to save Sender base check. key
+                   # IP ---> value: status.
 
+        self.senderbase_status = {}
 
+        # Select each ip from IP list and get the corresponding page
+        # from senderbase.org and then crawel the required area.
 
-	def check_senderbase(self):
+        for ip in self.ip:
 
-		#print "Checking sender base..."
+            url = 'http://www.senderbase.org/senderbase_queries/detailip?search_string=' + ip
 
-                #Create a dictionry to save Sender base check. key: IP ---> value: status.
+            sock = urllib.urlopen(url)
+            htmlfile = sock.read()
+            sock.close()
 
-                self.senderbase_status={};
+            # Pattern used to get the reputation status form the Senderbase webpage.Need some changes here when they changes
+            # Codes.
+            regex_pattern = re.compile('''SenderBase reputation score</td>.*?<td[a-zA-Z="%0-9' ]*>.*?([a-zA-Z]+).*?</td>''', re.I | re.S | re.M)
 
-		#Select each ip from IP list and get the corresponding page from senderbase.org and then crawel the required area.
-		for ip in self.ip:
-
-			url='http://www.senderbase.org/senderbase_queries/detailip?search_string=' + ip
-
-			sock=urllib.urlopen(url);
-
-			htmlfile = sock.read()
-			sock.close();
-
-			# Pattern used to get the reputation status form the Senderbase webpage.Need some changes here when they changes
-			# Codes.
-			regex_pattern=re.compile('''SenderBase reputation score</td>.*?<td[a-zA-Z="%0-9' ]*>.*?([a-zA-Z]+).*?</td>''',re.I|re.S|re.M);
-
-
-			final_result=regex_pattern.findall(htmlfile);
-			#print ip,":", final_result[0];
+            final_result = regex_pattern.findall(htmlfile)
+            #print ip,":", final_result[0];
 
                         #Save the result in to a list.
-                        self.senderbase_status[ip] = final_result[0];
+            self.senderbase_status[ip] = final_result[0]
 
-                '''
-                keys=self.senderbase_status.keys()
-                keys.sort()   #inplace replacement of sorted keys.
-                for ip in keys:
-                    print ip,":",self.senderbase_status[ip];
+            '''
+            keys=self.senderbase_status.keys()
+            keys.sort()   #inplace replacement of sorted keys.
+            for ip in keys:
+                print ip,":",self.senderbase_status[ip];
+            '''
 
-                    
-                '''
+            '''
 
-		'''
-
-			SenderBase reputation score</td>
-			<td width="20%" class="good">
-			Good
-			</td>
+                SenderBase reputation score</td>
+                <td width="20%" class="good">
+                Good
+                </td>
 
 
 
 
-                	Regex more:
+                        Regex more:
 
-        		re.I --> To get Case Insensitive Matching.
-        		re.S --> To Match all characters with "." including newline.
-        		re.M --> To match Multiple line.
-
-
-                      #End of Sender base function.
-                '''
+                    re.I --> To get Case Insensitive Matching.
+                    re.S --> To Match all characters with "." including newline
+                    re.M --> To match Multiple line.
 
 
+                          #End of Sender base function.
+            '''
 
 
-	def check_dnsbl(self):
+
+
+    def check_dnsbl(self):
 
                 '''
                    Check_dnsbl(): Check ips with DNS Black lists. and gives the
@@ -133,7 +123,7 @@ class IP:
                 '''
 
 
-		dnsbls=['pam.mrs.kithrup.com', 'access.redhawk.org', 'all.spamblock.unit.liu.se', 'assholes.madscience.nl', 'blackholes.five-ten-sg.com', 'blackholes.intersil.net', 'blackholes.mail-abuse.org', 'blackholes.sandes.dk', 'blackholes.wirehub.net', 'blacklist.sci.kun.nl', 'bl.borderworlds.dk', 'bl.csma.biz', 'block.dnsbl.sorbs.net', 'blocked.hilli.dk', 'blocklist2.squawk.com', 'blocklist.squawk.com', 'bl.redhatgate.com', 'bl.spamcannibal.org', 'bl.spamcop.net', 'bl.starloop.com', 'bl.technovision.dk', 'cart00ney.surriel.com', 'cbl.abuseat.org', 'dev.null.dk', 'dews.qmail.org', 'dialup.blacklist.jippg.org', 'dialup.rbl.kropka.net', 'dialups.mail-abuse.org', 'dialups.visi.com', 'dnsbl-1.uceprotect.net', 'dnsbl-2.uceprotect.net', 'dnsbl-3.uceprotect.net', 'dnsbl.antispam.or.id', 'dnsbl.cyberlogic.net', 'dnsbl.njabl.org', 'dnsbl.solid.net', 'dnsbl.sorbs.net', 'duinv.aupads.org', 'dul.dnsbl.sorbs.net', 'dul.ru', 'dun.dnsrbl.net', 'dynablock.wirehub.net', 'fl.chickenboner.biz', 'forbidden.icm.edu.pl', 'hil.habeas.com', 'http.dnsbl.sorbs.net', 'intruders.docs.uu.se', 'korea.services.net', 'mail-abuse.blacklist.jippg.org', 'map.spam-rbl.com', 'misc.dnsbl.sorbs.net', 'msgid.bl.gweep.ca', 'multihop.dsbl.org', 'no-more-funn.moensted.dk','orbs.dorkslayers.com', 'orvedb.aupads.org','proxy.bl.gweep.ca', 'psbl.surriel.com', 'pss.spambusters.org.ar', 'rblmap.tu-berlin.de', 'rbl.schulte.org', 'rbl.snark.net', 'rbl.triumf.ca','relays.bl.gweep.ca', 'relays.bl.kundenserver.de', 'relays.dorkslayers.com', 'relays.mail-abuse.org', 'relays.nether.net', 'rsbl.aupads.org', 'sbl.csma.biz', 'sbl.spamhaus.org', 'sbl-xbl.spamhaus.org', 'smtp.dnsbl.sorbs.net', 'socks.dnsbl.sorbs.net', 'spam.dnsbl.sorbs.net', 'spam.dnsrbl.net', 'spamguard.leadmon.net', 'spam.olsentech.net', 'spamsources.dnsbl.info', 'spamsources.fabel.dk', 'spamsources.yamta.org', 'spam.wytnij.to', 'unconfirmed.dsbl.org', 'vbl.messagelabs.com', 'web.dnsbl.sorbs.net', 'whois.rfc-ignorant.org', 'will-spam-for-food.eu.org', 'xbl.spamhaus.org', 'zombie.dnsbl.sorbs.net', 'ztl.dorkslayers.com', 'cbl.abuseat.org', 'bhnc.njabl.org', 't1.dnsbl.net.au', 'list.dsbl.org', 'luckyseven.dnsbl.net', 'blacklist.spambag.org', 'dyna.spamrats.com', 'spam.spamrats.com', 'ubl.unsubscore.com', 'db.wpbl.info', '0spam.fusionzero.com']
+        dnsbls=['pam.mrs.kithrup.com', 'access.redhawk.org', 'all.spamblock.unit.liu.se', 'assholes.madscience.nl', 'blackholes.five-ten-sg.com', 'blackholes.intersil.net', 'blackholes.mail-abuse.org', 'blackholes.sandes.dk', 'blackholes.wirehub.net', 'blacklist.sci.kun.nl', 'bl.borderworlds.dk', 'bl.csma.biz', 'block.dnsbl.sorbs.net', 'blocked.hilli.dk', 'blocklist2.squawk.com', 'blocklist.squawk.com', 'bl.redhatgate.com', 'bl.spamcannibal.org', 'bl.spamcop.net', 'bl.starloop.com', 'bl.technovision.dk', 'cart00ney.surriel.com', 'cbl.abuseat.org', 'dev.null.dk', 'dews.qmail.org', 'dialup.blacklist.jippg.org', 'dialup.rbl.kropka.net', 'dialups.mail-abuse.org', 'dialups.visi.com', 'dnsbl-1.uceprotect.net', 'dnsbl-2.uceprotect.net', 'dnsbl-3.uceprotect.net', 'dnsbl.antispam.or.id', 'dnsbl.cyberlogic.net', 'dnsbl.njabl.org', 'dnsbl.solid.net', 'dnsbl.sorbs.net', 'duinv.aupads.org', 'dul.dnsbl.sorbs.net', 'dul.ru', 'dun.dnsrbl.net', 'dynablock.wirehub.net', 'fl.chickenboner.biz', 'forbidden.icm.edu.pl', 'hil.habeas.com', 'http.dnsbl.sorbs.net', 'intruders.docs.uu.se', 'korea.services.net', 'mail-abuse.blacklist.jippg.org', 'map.spam-rbl.com', 'misc.dnsbl.sorbs.net', 'msgid.bl.gweep.ca', 'multihop.dsbl.org', 'no-more-funn.moensted.dk','orbs.dorkslayers.com', 'orvedb.aupads.org','proxy.bl.gweep.ca', 'psbl.surriel.com', 'pss.spambusters.org.ar', 'rblmap.tu-berlin.de', 'rbl.schulte.org', 'rbl.snark.net', 'rbl.triumf.ca','relays.bl.gweep.ca', 'relays.bl.kundenserver.de', 'relays.dorkslayers.com', 'relays.mail-abuse.org', 'relays.nether.net', 'rsbl.aupads.org', 'sbl.csma.biz', 'sbl.spamhaus.org', 'sbl-xbl.spamhaus.org', 'smtp.dnsbl.sorbs.net', 'socks.dnsbl.sorbs.net', 'spam.dnsbl.sorbs.net', 'spam.dnsrbl.net', 'spamguard.leadmon.net', 'spam.olsentech.net', 'spamsources.dnsbl.info', 'spamsources.fabel.dk', 'spamsources.yamta.org', 'spam.wytnij.to', 'unconfirmed.dsbl.org', 'vbl.messagelabs.com', 'web.dnsbl.sorbs.net', 'whois.rfc-ignorant.org', 'will-spam-for-food.eu.org', 'xbl.spamhaus.org', 'zombie.dnsbl.sorbs.net', 'ztl.dorkslayers.com', 'cbl.abuseat.org', 'bhnc.njabl.org', 't1.dnsbl.net.au', 'list.dsbl.org', 'luckyseven.dnsbl.net', 'blacklist.spambag.org', 'dyna.spamrats.com', 'spam.spamrats.com', 'ubl.unsubscore.com', 'db.wpbl.info', '0spam.fusionzero.com']
                 #dnsbls=['dead_list checker.']
                 #Create a dictnory for store the
 
@@ -166,7 +156,7 @@ class IP:
                     #print ip,':',local_list  #output the blacklist infor of each ip.
 
                 
-	def check_honeypot(self):
+    def check_honeypot(self):
 
 
             '''
@@ -188,8 +178,8 @@ class IP:
                 ip_result={} 
                 url='http://projecthoneypot.org/ip_' + ip
                 sock=urllib.urlopen(url);
-		htmlfile = sock.read()
-		sock.close();
+        htmlfile = sock.read()
+        sock.close();
 
 
                 regex_pattern0=re.compile('''We don\'t have data on this IP currently''',re.I)
