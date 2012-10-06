@@ -33,3 +33,9 @@ being sending from this IP and domain.
     This is kinda more secure method. Most of the ISPs fine with the SPF
     setttings only. So first do the SPF and then setup the DKIM.
     
+
+How to install
+==============
+
+$ python setup.py install
+

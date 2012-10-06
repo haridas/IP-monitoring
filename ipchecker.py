@@ -47,6 +47,8 @@ class IP:
           '''
 
     def __init__(self, ip):
+
+        assert isinstance(ip, list), "Provide List of Ip's"
         self.ip = ip
 
     def __del__(self):
@@ -67,8 +69,10 @@ class IP:
 
         for ip in self.ip:
 
-            url = 'http://www.senderbase.org/senderbase_queries\
-                    /detailip?search_string=' + ip
+            url = 'http://www.senderbase.org/senderbase_queries' +\
+                    '/detailip?search_string=' + ip
+
+            #import pdb; pdb.set_trace()
 
             sock = urllib.urlopen(url)
             htmlfile = sock.read()
@@ -76,9 +80,10 @@ class IP:
 
             # Pattern used to get the reputation status form the Senderbase
             # webpage.Need some changes here when they changes Codes.
-            regex_pattern = re.compile('''SenderBase reputation score</td>.*?\
-                                       <td[a-zA-Z="%0-9' ]*>.*?([a-zA-Z]+).*?\
-                                       </td>''', re.I | re.S | re.M)
+            regex_pattern = re.compile("""SenderBase reputation score""" + \
+                                       """</td>.*?<td[a-zA-Z="%0-9' ]*>""" + \
+                                       """.*?([a-zA-Z]+).*?</td>""",
+                                       re.I | re.S | re.M)
 
             final_result = regex_pattern.findall(htmlfile)
             #print ip,":", final_result[0];
