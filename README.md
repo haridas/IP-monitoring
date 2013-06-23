@@ -1,12 +1,17 @@
 Ipmonitoring
 ============
 
-Check the reputation of your IP before seinding mails from it. If it doesn't
+WARNING: The internals of the code using web page crawling using python regular
+expression. Since the crawling URLs may change in future I'm not sure this code
+work all the time, In that scenario changes to the URL and regular expression
+required.
+
+Check the reputation of your IP before sending mails from it. If it doesn't
 have good reputation then the chance for your mails go into users' spam folder
 is very high.
 
 
-If the IP hasn't have good reputation, most probabley it was due to your
+If the IP hasn't have good reputation, most probably it was due to your
 incorrect settings on the DNS zone file. So you need to correctly set the
 following settings to claim that you are the soul owner of mails that you are
 being sending from this IP and domain.
@@ -32,10 +37,3 @@ being sending from this IP and domain.
 
     This is kinda more secure method. Most of the ISPs fine with the SPF
     setttings only. So first do the SPF and then setup the DKIM.
-    
-
-How to install
-==============
-
-$ python setup.py install
-
