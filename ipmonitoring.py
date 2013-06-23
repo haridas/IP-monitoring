@@ -196,7 +196,7 @@ class ipmonitoring:
             localtime = localtime = time.localtime(time.time())
             check_time = str(localtime[0]) + '-' + str(localtime[1]) + '-'\
                     + str(localtime[2])
-            mail_subject = 'Ip Status Report from Sparksupport[' + \
+            mail_subject = 'Ip Status Report from IPmonitoring Tool [' + \
                     check_time + ']'
             try:
                     mail = Smtp('localhost', '', '')
