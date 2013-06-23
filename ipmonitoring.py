@@ -177,56 +177,65 @@ class ipmonitoring:
             status_flag = status_flag + 1
 
         if status_flag > 0:
-
             try:
 
-                report = get_report(ip_check)
-                report.create_html_report()
+                #report = get_report(ip_check)
+                #report.create_html_report()
                 #Use render() function to get the string output,
                 #required to wirte to report html.
 
-                html_report = report.html_report.render()
+                #html_report = report.html_report.render()
+
+                # Print available reports directly to the knosole.
+                if hasattr(ip_check, 'dnsbl_status'):
+                    print ip_check.dnsbl_status
+
+                if hasattr(ip_check, 'honeypot_result'):
+                    print ip_check.honeypot_result
+
+                if hasattr(ip_check, 'senderbase_status'):
+                    print ip_check.senderbase_status
             except:
                 print 'Testing...'
                 print sys.exc_info()
 
-            #====Code for sending mails after getting all the reports.====#
+            ##====Code for sending mails after getting all the reports.====#
 
-            #Get the Local time in the Formated way.
-            localtime = localtime = time.localtime(time.time())
-            check_time = str(localtime[0]) + '-' + str(localtime[1]) + '-'\
-                    + str(localtime[2])
-            mail_subject = 'Ip Status Report from IPmonitoring Tool [' + \
-                    check_time + ']'
-            try:
-                    mail = Smtp('localhost', '', '')
-                    # Setting the local default MTA to send mails,
-                    # from current script running user.
-                    mail.from_addr(config.MAIL_FROM)
-                    mail.subject(mail_subject)
-                    mail.connect()
-                    mail.message(html_report)
-                    mail.rcpt_to(self.email_list)
-                    mail.send('html')
-                    mail.close()
-                    print 'Report sent to mail address.'
-            except:
-                    print 'Error while sending mails..', sys.exc_info()[1]
+            ##Get the Local time in the Formated way.
+            #localtime = localtime = time.localtime(time.time())
+            #check_time = str(localtime[0]) + '-' + str(localtime[1]) + '-'\
+            #        + str(localtime[2])
+            #mail_subject = 'Ip Status Report from IPmonitoring Tool [' + \
+            #        check_time + ']'
+            #try:
+            #        mail = Smtp('localhost', '', '')
+            #        # Setting the local default MTA to send mails,
+            #        # from current script running user.
+            #        mail.from_addr(config.MAIL_FROM)
+            #        mail.subject(mail_subject)
+            #        mail.connect()
+            #        mail.message(html_report)
+            #        mail.rcpt_to(self.email_list)
+            #        mail.send('html')
+            #        mail.close()
+            #        print 'Report sent to mail address.'
+            #except:
+            #        print 'Error while sending mails..', sys.exc_info()[1]
 
-            #Save the Email Addres to which we send emails.
-            try:
+            ##Save the Email Addres to which we send emails.
+            #try:
 
-                file = open(config.LOG_FILE, "a+")
-                log = ", ".join(self.email_list) + " | " + check_time +\
-                        " " + str(localtime[3]) + ":" + str(localtime[4]) +\
-                        ":" + str(localtime[5]) + " | " + sys.argv[2]
+            #    file = open(config.LOG_FILE, "a+")
+            #    log = ", ".join(self.email_list) + " | " + check_time +\
+            #            " " + str(localtime[3]) + ":" + str(localtime[4]) +\
+            #            ":" + str(localtime[5]) + " | " + sys.argv[2]
 
-                file.write(log)
-                file.write("\n")
-                file.close()
-            except:
-                print sys.exc_info()
-            #print html_report
+            #    file.write(log)
+            #    file.write("\n")
+            #    file.close()
+            #except:
+            #    print sys.exc_info()
+            ##print html_report
 
         else:
 

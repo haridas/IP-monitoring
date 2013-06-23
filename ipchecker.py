@@ -108,8 +108,11 @@ class IP:
             final_result = regex_pattern.findall(htmlfile)
             #print ip,":", final_result[0];
 
-                        #Save the result in to a list.
-            self.senderbase_status[ip] = final_result[0]
+            #Save the result in to a list.
+            try:
+                self.senderbase_status[ip] = final_result[0]
+            except IndexError:
+                pass
 
             '''
             keys=self.senderbase_status.keys()
