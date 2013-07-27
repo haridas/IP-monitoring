@@ -33,7 +33,7 @@ except:
 
 try:
     import ipchecker
-    from report import get_report
+    #from report import get_report
 except:
     print "The System path is not set correctly,\
             Please check the module paths."
@@ -133,7 +133,6 @@ class ipmonitoring:
         '''
         try:
             if len(sys.argv) > 1:
-                #print "checking for command line options..."
                 self.read_commandline()
             else:
                 #self.read_ini_conf()
@@ -143,16 +142,16 @@ class ipmonitoring:
 
         except:
 
-            print 'Input error.'
-            print sys.exc_info()[1]
+            #print 'Input error.'
+            #print sys.exc_info()[1]
             print '''
                 ----Input Error----
 
                 Check your input.
 
-                Use this format :
+                USAGE FORMAT:
 
-                ipmonitoring -[d|h|s|all] [ip,ip/cidr,...] [email,emails...]
+                python ipmonitoring.py -[d|h|s|all] [ip,ip/cidr,...]
 
             '''
             sys.exit()
@@ -285,18 +284,6 @@ class ipmonitoring:
             p = self.cidr_spliting(ip)
             if p != []:
                 self.iplist.extend(p)
-
-        self.email_list = sys.argv[3].split(",")
-        #print self.email_list
-
-        '''
-        if sys.argv[1] == '-s':
-            self.senderbase_check = 'True'
-        elif sys.argv[1] =='-h':
-            self.honeypot_check = 'True'
-        elif sys.argv[1] == '-d':
-            self.dnsbl_check = 'True'
-        '''
 
         if sys.argv[1][0] == '-':
             comd_option = sys.argv[1][1:]
