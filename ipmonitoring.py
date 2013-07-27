@@ -153,6 +153,15 @@ class ipmonitoring:
 
                 python ipmonitoring.py -[d|h|s|all] [ip,ip/cidr,...]
 
+                    WHERE:
+
+                    Option -d for DNSBL check
+                    Option -h for honeypot check
+                    Option -s for senderbase check
+                    Option -all for check all the option
+
+                    ip/cidr - Input single IP or multiple range of IP in CIDR format.
+
             '''
             sys.exit()
 
