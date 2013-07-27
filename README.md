@@ -49,6 +49,10 @@ HOW To Run It
 ============
 
 1. Clone the repository into your local machine.
+    $ git clone git@github.com:haridas/IP-monitoring.git
+        OR
+    Download the zip file from the github.
+
 2. Go into the main project folder, and type -
     $ python ipmonitoring.py --help # To see the help
 
