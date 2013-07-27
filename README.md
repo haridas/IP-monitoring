@@ -61,13 +61,14 @@ HOW To Run It
 
             python ipmonitoring.py -[d|h|s|all] [ip,ip/cidr,...] 
 
-    where:
 
-    Option -d for DNSBL check
-    Option -h for honeypot check
-    Option -s for senderbase check
-    Option -all for check all the option
+            where:
 
-    ip/cidr - Input single IP or multiple range of IP in CIDR format.
+            Option -d for DNSBL check
+            Option -h for honeypot check
+            Option -s for senderbase check
+            Option -all for check all the option
+
+            ip/cidr - Input single IP or multiple range of IP in CIDR format.
 
 
